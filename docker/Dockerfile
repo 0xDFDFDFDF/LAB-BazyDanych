@@ -170,7 +170,7 @@ CMD ["cassandra"]
 
 COPY hbase2-docker/*.sh /build/
 
-ENV HBASE_VERSION 2.0.0-alpha-3
+ENV HBASE_VERSION 2.2.2
 
 RUN /build/prepare-hbase.sh && \
     cd /opt/hbase && /build/build-hbase.sh \
@@ -178,13 +178,13 @@ RUN /build/prepare-hbase.sh && \
 
 VOLUME /data
 
-ADD ./hbase-site.xml /opt/hbase/conf/hbase-site.xml
+ADD ./hbase2-docker/hbase-site.xml /opt/hbase/conf/hbase-site.xml
 
-ADD ./zoo.cfg /opt/hbase/conf/zoo.cfg
+ADD ./hbase2-docker/zoo.cfg /opt/hbase/conf/zoo.cfg
 
-ADD ./replace-hostname /opt/replace-hostname
+ADD ./hbase2-docker/replace-hostname /opt/replace-hostname
 
-ADD ./hbase-server /opt/hbase-server
+ADD ./hbase2-docker/hbase-server /opt/hbase-server
 
 # REST API
 EXPOSE 8080
