@@ -149,9 +149,9 @@ RUN set -eux; \
 # https://issues.apache.org/jira/browse/CASSANDRA-11661
 	sed -ri 's/^(JVM_PATCH_VERSION)=.*/\1=25/' "$CASSANDRA_CONFIG/cassandra-env.sh"
 
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN ln -s usr/local/bin/docker-entrypoint.sh /docker-entrypoint.sh # backwards compat
-ENTRYPOINT ["docker-entrypoint.sh"]
+# COPY cassandra-docker/docker-entrypoint.sh /usr/local/bin/
+# RUN ln -s usr/local/bin/docker-entrypoint.sh /docker-entrypoint.sh # backwards compat
+# ENTRYPOINT ["docker-entrypoint.sh"]
 
 RUN mkdir -p /var/lib/cassandra "$CASSANDRA_CONFIG" \
 	&& chown -R cassandra:cassandra /var/lib/cassandra "$CASSANDRA_CONFIG" \
@@ -164,7 +164,6 @@ VOLUME /var/lib/cassandra
 # 9042: CQL
 # 9160: thrift service
 EXPOSE 7000 7001 7199 9042 9160
-CMD ["cassandra"]
 
 # HBASE
 
@@ -199,4 +198,13 @@ EXPOSE 2181
 # HBase Master web UI at :16010/master-status;  ZK at :16010/zk.jsp
 EXPOSE 16010
 
-CMD ["/opt/hbase-server"]
+# USER cassandra
+# RUN ["cassandra"]
+# USER root
+# RUN ["/opt/hbase-server"]
+
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN ln -s usr/local/bin/docker-entrypoint.sh /docker-entrypoint.sh # backwards compat
+USER root
+
+# ENTRYPOINT ["docker-entrypoint.sh"]
